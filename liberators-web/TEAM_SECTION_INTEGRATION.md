@@ -478,3 +478,6 @@ Hero → Testimonials → CTA → Team (NEW!) → FAQ → Footer
 
 Hover over avatars to see the color transition! 🎭
 
+
+
+

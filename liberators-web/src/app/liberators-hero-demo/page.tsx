@@ -29,7 +29,7 @@ export default function LiberatorsHeroDemo() {
           "Enterprise-grade AI",
           "24/7 intelligent automation",
           "Strategic capacity multiplied"
-        ]}
+        ]}Τίποτα δεν μπορεί να το κάνουμε για το ο, oοο Start your transformation που είναι το CTA Book Discovery Session with Definite Strategy Capacity κτλ. Κτλ. Οπότε αυτό που είπαμε για το section με το CTA.
       />
 
       {/* 
@@ -70,4 +70,7 @@ export const metadata = {
   title: "Liberators AI - Your AI Workforce | Neural Network Demo",
   description: "Build cognitive teams that multiply strategic capacity, work 24/7, and evolve with your business.",
 };
+
+
+
 

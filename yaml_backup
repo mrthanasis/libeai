@@ -1,0 +1,123 @@
+services:
+  traefik:
+    image: "traefik"
+    restart: always
+    command:
+      - "--api=true"
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
+      - "--entrypoints.web.http.redirections.entryPoint.to=websecure"
+      - "--entrypoints.web.http.redirections.entryPoint.scheme=https"
+      - "--entrypoints.websecure.address=:443"
+      - "--certificatesresolvers.mytlschallenge.acme.tlschallenge=true"
+      - "--certificatesresolvers.mytlschallenge.acme.email=${SSL_EMAIL}"
+      - "--certificatesresolvers.mytlschallenge.acme.storage=/letsencrypt/acme.json"
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - traefik_data:/letsencrypt
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  # === MAIN INSTANCE: n8n.liberators.cloud ===
+  n8n_liberators:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n-liberators.rule=Host(`n8n.liberators.cloud`)
+      - traefik.http.routers.n8n-liberators.entrypoints=web,websecure
+      - traefik.http.routers.n8n-liberators.tls=true
+      - traefik.http.routers.n8n-liberators.tls.certresolver=mytlschallenge
+      - traefik.http.middlewares.n8n-liberators.headers.SSLRedirect=true
+      - traefik.http.middlewares.n8n-liberators.headers.STSSeconds=315360000
+      - traefik.http.middlewares.n8n-liberators.headers.browserXSSFilter=true
+      - traefik.http.middlewares.n8n-liberators.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.n8n-liberators.headers.forceSTSHeader=true
+      - traefik.http.middlewares.n8n-liberators.headers.SSLHost=liberators.cloud
+      - traefik.http.middlewares.n8n-liberators.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.n8n-liberators.headers.STSPreload=true
+      - traefik.http.routers.n8n-liberators.middlewares=n8n-liberators@docker
+    environment:
+      - N8N_HOST=n8n.liberators.cloud
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://n8n.liberators.cloud/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - N8N_PROXY_HOPS=1
+    volumes:
+      - n8n_data:/home/node/.n8n
+      - /local-files:/files
+
+  # === CLIENT 1: cambo.liberators.cloud ===
+  n8n_cambo:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n-cambo.rule=Host(`cambo.liberators.cloud`)
+      - traefik.http.routers.n8n-cambo.entrypoints=web,websecure
+      - traefik.http.routers.n8n-cambo.tls=true
+      - traefik.http.routers.n8n-cambo.tls.certresolver=mytlschallenge
+      - traefik.http.middlewares.n8n-cambo.headers.SSLRedirect=true
+      - traefik.http.middlewares.n8n-cambo.headers.STSSeconds=315360000
+      - traefik.http.middlewares.n8n-cambo.headers.browserXSSFilter=true
+      - traefik.http.middlewares.n8n-cambo.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.n8n-cambo.headers.forceSTSHeader=true
+      - traefik.http.middlewares.n8n-cambo.headers.SSLHost=liberators.cloud
+      - traefik.http.middlewares.n8n-cambo.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.n8n-cambo.headers.STSPreload=true
+      - traefik.http.routers.n8n-cambo.middlewares=n8n-cambo@docker
+    environment:
+      - N8N_HOST=cambo.liberators.cloud
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://cambo.liberators.cloud/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - N8N_PROXY_HOPS=1
+    volumes:
+      - n8n_cambo_data:/home/node/.n8n
+      - /local-files:/files
+
+  # === CLIENT 2: wdh.liberators.cloud ===
+  n8n_wdh:
+    image: docker.n8n.io/n8nio/n8n
+    restart: always
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.n8n-wdh.rule=Host(`wdh.liberators.cloud`)
+      - traefik.http.routers.n8n-wdh.entrypoints=web,websecure
+      - traefik.http.routers.n8n-wdh.tls=true
+      - traefik.http.routers.n8n-wdh.tls.certresolver=mytlschallenge
+      - traefik.http.middlewares.n8n-wdh.headers.SSLRedirect=true
+      - traefik.http.middlewares.n8n-wdh.headers.STSSeconds=315360000
+      - traefik.http.middlewares.n8n-wdh.headers.browserXSSFilter=true
+      - traefik.http.middlewares.n8n-wdh.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.n8n-wdh.headers.forceSTSHeader=true
+      - traefik.http.middlewares.n8n-wdh.headers.SSLHost=liberators.cloud
+      - traefik.http.middlewares.n8n-wdh.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.n8n-wdh.headers.STSPreload=true
+      - traefik.http.routers.n8n-wdh.middlewares=n8n-wdh@docker
+    environment:
+      - N8N_HOST=wdh.liberators.cloud
+      - N8N_PORT=5678
+      - N8N_PROTOCOL=https
+      - NODE_ENV=production
+      - WEBHOOK_URL=https://wdh.liberators.cloud/
+      - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
+      - N8N_PROXY_HOPS=1
+    volumes:
+      - n8n_wdh_data:/home/node/.n8n
+      - /local-files:/files
+
+volumes:
+  traefik_data:
+    external: true
+  n8n_data:
+    external: true        # το παλιό main volume σου
+  n8n_cambo_data:
+  n8n_wdh_data:

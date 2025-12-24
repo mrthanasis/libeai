@@ -1,12 +1,13 @@
 "use client";
 
-import { Briefcase, Mail, Lightbulb, TrendingUp } from 'lucide-react';
+import { Briefcase, Mail, Lightbulb, TrendingUp, Workflow } from 'lucide-react';
 import { NavBar } from "@/components/ui/tubelight-navbar";
 import Image from 'next/image';
 
 export function NavbarWrapper() {
   const navItems = [
     { name: 'What We Do', url: '#what-we-do', icon: Lightbulb },
+    { name: 'How It Works', url: '#how-it-works', icon: Workflow },
     { name: 'Services', url: '#services', icon: Briefcase },
     { name: 'Results', url: '#results', icon: TrendingUp },
     { name: 'Contact', url: '#contact', icon: Mail, highlight: true }

@@ -1,17 +1,68 @@
-import PatternHero from "@/components/ui/pattern-hero";
-import { Footerdemo } from "@/components/ui/footer-section";
-import { StaggerTestimonials } from "@/components/ui/stagger-testimonials";
-import { TeamSection } from "@/components/ui/team-section";
-import { FAQSection } from "@/components/ui/faq-section";
-import { WhatWeDoHero } from "@/components/ui/what-we-do-hero";
-import { FinalCTASection } from "@/components/ui/final-cta-section";
-import { LiberationEffectSection } from "@/components/ui/liberation-effect-section";
-import { ServicesSplitSection } from "@/components/ui/services-split-section";
-import { TransformationCarousel } from "@/components/ui/transformation-carousel";
-import { ProcessFlowSection } from "@/components/ui/process-flow-section";
-import { CognitiveTeamsGrid } from "@/components/ui/cognitive-teams-grid";
-import { ContactFormSection } from "@/components/ui/contact-form-section";
+"use client";
+
+import dynamic from 'next/dynamic';
 import { NavbarWrapper } from "@/components/navbar-wrapper";
+import { ScrollToTop } from "@/components/ui/scroll-to-top";
+
+// Critical components - load immediately
+import PatternHero from "@/components/ui/pattern-hero";
+import { WhatWeDoHero } from "@/components/ui/what-we-do-hero";
+
+// Lazy load below-the-fold components with loading states
+const ServicesSplitSection = dynamic(() => import("@/components/ui/services-split-section").then(mod => ({ default: mod.ServicesSplitSection })), {
+  loading: () => <div className="h-screen w-full bg-background animate-pulse" />,
+  ssr: true
+});
+
+const ProcessFlowSection = dynamic(() => import("@/components/ui/process-flow-section").then(mod => ({ default: mod.ProcessFlowSection })), {
+  loading: () => <div className="h-screen w-full bg-background animate-pulse" />,
+  ssr: true
+});
+
+const LiberationEffectSection = dynamic(() => import("@/components/ui/liberation-effect-section").then(mod => ({ default: mod.LiberationEffectSection })), {
+  loading: () => <div className="h-screen w-full bg-background animate-pulse" />,
+  ssr: false // Heavy animations - client only
+});
+
+const CognitiveTeamsGrid = dynamic(() => import("@/components/ui/cognitive-teams-grid").then(mod => ({ default: mod.CognitiveTeamsGrid })), {
+  loading: () => <div className="h-screen w-full bg-background animate-pulse" />,
+  ssr: false // Heavy animations - client only
+});
+
+const TransformationCarousel = dynamic(() => import("@/components/ui/transformation-carousel").then(mod => ({ default: mod.TransformationCarousel })), {
+  loading: () => <div className="h-screen w-full bg-background animate-pulse" />,
+  ssr: true
+});
+
+const TeamSection = dynamic(() => import("@/components/ui/team-section").then(mod => ({ default: mod.TeamSection })), {
+  loading: () => <div className="h-96 w-full bg-background animate-pulse" />,
+  ssr: true
+});
+
+const StaggerTestimonials = dynamic(() => import("@/components/ui/stagger-testimonials").then(mod => ({ default: mod.StaggerTestimonials })), {
+  loading: () => <div className="h-96 w-full bg-background animate-pulse" />,
+  ssr: true
+});
+
+const FinalCTASection = dynamic(() => import("@/components/ui/final-cta-section").then(mod => ({ default: mod.FinalCTASection })), {
+  loading: () => <div className="h-96 w-full bg-background animate-pulse" />,
+  ssr: false // Sparkles effect - client only
+});
+
+const FAQSection = dynamic(() => import("@/components/ui/faq-section").then(mod => ({ default: mod.FAQSection })), {
+  loading: () => <div className="h-96 w-full bg-background animate-pulse" />,
+  ssr: false // Radix Accordion - client only to avoid hydration issues
+});
+
+const ContactFormSection = dynamic(() => import("@/components/ui/contact-form-section").then(mod => ({ default: mod.ContactFormSection })), {
+  loading: () => <div className="h-96 w-full bg-background animate-pulse" />,
+  ssr: true
+});
+
+const Footerdemo = dynamic(() => import("@/components/ui/footer-section").then(mod => ({ default: mod.Footerdemo })), {
+  loading: () => <div className="h-64 w-full bg-background animate-pulse" />,
+  ssr: true
+});
 
 export default function DemoPage() {
   return (
@@ -105,6 +156,9 @@ export default function DemoPage() {
       
       {/* Footer */}
       <Footerdemo />
+
+      {/* Scroll to Top Button */}
+      <ScrollToTop />
     </div>
   );
 }
