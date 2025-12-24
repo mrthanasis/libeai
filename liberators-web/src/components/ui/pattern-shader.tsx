@@ -92,7 +92,7 @@ const PatternShader: FC<PatternShaderProps> = ({
 }) => {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [error, setError] = useState<string | null>(null);
-  const frameId = useRef<number>();
+  const frameId = useRef<number | null>(null);
 
   useEffect(() => {
     const canvas = canvasRef.current;
